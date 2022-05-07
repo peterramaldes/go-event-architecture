@@ -1,16 +1,6 @@
 version: "3.7"
 
 services:
-  client:
-    build:
-      context: ./client
-      dockerfile: ./resources/docker/app.dockerfile
-    depends_on:
-      - client_db
-    environment:
-      DATABASE_URL: postgres://event:123456@client_db/event?sslmode=disable
-    restart: on-failure
-
   client_db:
     build:
       context: ./client
@@ -20,16 +10,6 @@ services:
       POSTGRES_USER: event
       POSTGRES_PASSWORD: 123456
     restart: unless-stopped
-
-  product:
-    build:
-      context: ./product
-      dockerfile: ./resources/docker/app.dockerfile
-    depends_on:
-      - product_db
-    environment:
-      DATABASE_URL: postgres://event:123456@product_db/event?sslmode=disable
-    restart: on-failure
 
   product_db:
     build:
@@ -41,16 +21,6 @@ services:
       POSTGRES_PASSWORD: 123456
     restart: unless-stopped
 
-  order:
-    build:
-      context: ./order
-      dockerfile: ./resources/docker/app.dockerfile
-    depends_on:
-      - order_db
-    environment:
-      DATABASE_URL: postgres://event:123456@order_db/event?sslmode=disable
-    restart: on-failure
-
   order_db:
     build:
       context: ./order
@@ -60,4 +30,40 @@ services:
       POSTGRES_USER: event
       POSTGRES_PASSWORD: 123456
     restart: unless-stopped
+
+  bus:
+    build:
+      context: ./bus
+      dockerfile: ./resources/docker/app.dockerfile
+    restart: on-failure
+
+  client:
+    build:
+      context: ./client
+      dockerfile: ./resources/docker/app.dockerfile
+    depends_on:
+      - client_db
+    environment:
+      DATABASE_URL: postgres://event:123456@client_db/event?sslmode=disable
+    restart: on-failure
+
+  product:
+    build:
+      context: ./product
+      dockerfile: ./resources/docker/app.dockerfile
+    depends_on:
+      - product_db
+    environment:
+      DATABASE_URL: postgres://event:123456@product_db/event?sslmode=disable
+    restart: on-failure
+
+  order:
+    build:
+      context: ./order
+      dockerfile: ./resources/docker/app.dockerfile
+    depends_on:
+      - order_db
+    environment:
+      DATABASE_URL: postgres://event:123456@order_db/event?sslmode=disable
+    restart: on-failure
 
